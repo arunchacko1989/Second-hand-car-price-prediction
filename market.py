@@ -42,4 +42,15 @@ def predict_api():
     print(output[0])
     return jsonify(output[0])
 
+@app.route('/predict',methods=['post'])
+def predict():
+    data = [request.form.values()]
+    data = pd.DataFrame(data, index=['1'])
+    for i in data.columns:
+        if data[i].dtype == object:
+            data[i] = label_encoder.fit_transform(data[i])
+    output = model.predict(data)[0]
+    return render_template('home.html', prediction_text = "predicted car price is ${}".format(output))
+
+
 
